@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=5, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .layout {
+            display: grid;
+            grid-template-areas: "t t" "e e";
+            grid-template-rows: auto 1fr;
+            grid-template-columns: 50px 1fr;
+            grid-gap: 10px;
+            width: 100%;
+        }
+        .toolbar{
+            grid-area: t;
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-columns: 200px 100px 1fr 50px;
+            grid-gap: 5px;
+        }
+        .editor {
+            grid-area: e;
+            display: grid;
+            grid-gap: 10px;
+        }
+        .editor--row {
+            grid-template-areas: "b r";
+            grid-template-columns: 50px 1fr;
+            grid-template-rows: 50px;
+            grid-gap: 10px;
+            display: grid;
+        }
+        .button--primary {
+            border-style: solid;
+            border-width: 2px;
+            border-color: #000;
+            background-color: #fff;
+            padding: 10px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .button--primary:hover {
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+        .result {
+            border-style: solid;
+            border-width: 1px;
+            border-color: #000;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+    <title>Print Queue</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>Print Queue</h1>
+        </header>
+        <hr>
+        <main id="app" class="layout">
+            <div class="toolbar">
+                <div @click="createRow()" class="button--primary">Add Row</div>
+                <div @click="undoStep()" class="button--primary">Undo</div>
+                <div></div>
+                <div @click="reset()" class="button--primary">Reset</div>
+            </div>
+            <div class="editor">
+                <div v-for="row of rows" class="editor--row">
+                    <div @click="createStep(row)" class="button--primary">
+                        +
+                    </div>
+                    <div class="result">
+                        <div v-for="step of steps">
+                            <div v-if="step.row == row.order">{{ steps.indexOf(step) }}, </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    rows: [],
+                    steps: []
+                }
+            },
+            methods: {
+                createRow(title) {
+                    if (!title) title = "";
+                    this.rows.push({ order: this.rows.length, title });
+                },
+                createStep(row) {
+                    this.steps.push({ row: row.order });
+                },
+                undoStep() {
+                    this.steps.pop();
+                },
+                reset() {
+                    this.steps = [];
+                    this.rows = [];
+                }
+            }
+        });
+    </script>
+</body>
+</html>
