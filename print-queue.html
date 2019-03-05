@@ -77,9 +77,7 @@
                         +
                     </div>
                     <div class="result">
-                        <div v-for="step of steps">
-                            <div v-if="step.row == row.order">{{ steps.indexOf(step) + 1 }}, </div>
-                        </div>
+                        {{ stepsRow(row) }}
                     </div>
                 </div>
             </div>
@@ -110,6 +108,16 @@
                 reset() {
                     this.steps = [];
                     this.rows = [];
+                },
+                stepsRow(row) {
+                    stepping = [];
+                    for(step of this.steps) {
+                        if(step.row == row.order) {
+                            stepping.push(this.steps.indexOf(step) + 1);
+                        }
+                    }
+
+                    return stepping;
                 }
             }
         });
